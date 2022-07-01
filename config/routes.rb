@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get '/facebook-webhooks', to: 'facebook_webhooks#verify'
+  post '/facebook-webhooks', to: 'facebook_webhooks#handle'
 end
