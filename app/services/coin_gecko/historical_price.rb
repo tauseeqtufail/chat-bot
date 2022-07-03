@@ -3,12 +3,13 @@
 module CoinGecko
   class HistoricalPrice < CoinGecko::Base
     # CoinGecko::HistoricalPrice.call({ id: string })
-    # Returns array of Hashes [{id: 'bitcoins', name: 'Bitcoins'}, ...]
+    # Returns array of Hashes [{ date: '12-06-2022', price: '$888' }, ...]
+    # TODO Either use switch case in call to support multiple price methods or create modular approche
     def call
       super do
         # Return historical_prices
         historical_prices =
-          client.get_daily_historical_prices(id: data[:id], days: data[:days] || 14)['prices']
+          client.get_daily_historical_prices(id: data[:id], days: data[:days] || 13)['prices']
         prepare_response(historical_prices)
       end
     end
