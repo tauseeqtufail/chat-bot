@@ -20,7 +20,7 @@ module CoinGecko
       @response = []
       prices.reverse.each do |time_and_price|
         date = Time.at(time_and_price[0]/1000).strftime("%d-%m-%Y")
-        price = "$#{time_and_price[1]}"
+        price = "$#{time_and_price[1].round(2)}"
         @response.push({ date: date, price: price })
       end
     end

@@ -1,4 +1,6 @@
 class FacebookWebhooksController < ApplicationController
+
+  # Verify webhook and subscribe services
   def verify
     mode = params['hub.mode']
     token = params['hub.verify_token']
@@ -14,34 +16,13 @@ class FacebookWebhooksController < ApplicationController
   end
 
   def handle
-    request_body = {
-      "recipient": {
-        "id": sender_psid
-      },
-      "message": {
-        "text": "Welcome, #{sender_name}"
-      }
-    }
-
-    send_message(request_body)
-
+    FacebookMessanger::Response.call(message)
     head :ok
   end
 
-  def sender_psid
-    params['entry'][0]['messaging'][0]['sender']['id']
-  end
+  private
 
-  def sender_name
-    response = HTTParty.get("https://graph.facebook.com/#{sender_psid}?fields=first_name,last_name&access_token=#{Rails.application.credentials.facebook[:page_access_token]}")
-    response.dig('first_name')
-  end
-
-  def send_message(request_body)
-    HTTParty.post(
-      'https://graph.facebook.com/v2.6/me/messages',
-      query: { access_token: Rails.application.credentials.facebook[:page_access_token] },
-      body: request_body
-    )
+  def message
+    params['entry'][0]['messaging'][0]
   end
 end
